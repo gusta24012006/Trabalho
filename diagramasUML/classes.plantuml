@@ -1,0 +1,99 @@
+@startuml
+
+title Snake Game Class Diagram
+
+package "game.utils" {
+    class Position {
+        - x : int
+        - y : int
+        + Position(x:int, y:int)
+        + getX() : int
+        + getY() : int
+        + up() : Position
+        + down() : Position
+        + left() : Position
+        + right() : Position
+        + equals(other:Position) : boolean
+        + isOpposite(p:Position) : boolean
+    }
+}
+
+package "game.elements" {
+
+    abstract class Element {
+        # position : Position
+        + Element(x:int, y:int)
+        + getPosition() : Position
+        + setPosition(pos:Position)
+        + draw(g:TextGraphics)
+    }
+
+    class Snake {
+        - body : List<Position>
+        - direction : Position
+        + Snake(startX:int, startY:int)
+        + draw(g:TextGraphics)
+        + setDirection(dir:Position)
+        + getBody() : List<Position>
+        + getNextHeadPosition() : Position
+        + grow()
+        + move()
+        + hitsSelf() : boolean
+    }
+
+    class Food {
+        + Food(x:int, y:int)
+        + draw(g:TextGraphics)
+    }
+
+    class Wall {
+        + Wall(x: int, y:int)
+        + draw(g: TextGraphics)
+    }
+
+    Element <|-- Snake
+    Element <|-- Food
+    Element <|-- Wall
+}
+
+package "game" {
+
+    class Arena {
+        - width : int
+        - height : int
+        - snake : Snake
+        - food : Food
+        - random : Random
+        - walls: List <Wall>
+        + Arena(width:int, height:int)
+        + draw(g:TextGraphics)
+        + processKey(key:KeyStroke)
+        + update()
+        - randomFood() : Food
+        - createWalls(): List <Wall>
+    }
+
+    class SnakeGame {
+        - arena: Arena
+        - screen: Screen
+        + SnakeGame()
+        + run()
+        + main(args:String[])
+    }
+
+    class Application{
+        
+    }
+}
+
+Arena --> Snake
+Arena --> Food
+Arena --> Position
+Element --> Position
+Snake --> Position
+Food --> Position
+SnakeGame --> Arena
+Wall --> Position
+Arena --> Wall
+
+@enduml
